@@ -3,6 +3,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <stdio.h>
+#include <string.h>
 
 const float maks_brizna = 0.1;
 const float korak_mete = 3;
@@ -133,15 +134,17 @@ void nacrtaj_prepreke(){
     	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
 	for(int i=0;i<MAX_PREPREKA;i++){
-		glPushMatrix();
-			glTranslatef(prepreke[i].x, 0,prepreke[i].z );
-            		glutSolidCube(0.25);
+        if (!prepreke[i].is_pogodjena) {
+            glPushMatrix();
+                glTranslatef(prepreke[i].x, 0,prepreke[i].z );
+                glutSolidCube(0.25);
       		glPopMatrix();
+        }
 	}
 }
 
 void iscrtaj_zid(){
-	const static GLfloat material_emission[] = { 0.2, 0.2, 0.2, 1 };
+	const static GLfloat material_emission[] = { 0.15, 0.15, 0.15, 1 };
     	
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
     	GLfloat diffuse_coeffs[] = { 0.8, 0.1, 0.8, 1 };
@@ -167,3 +170,34 @@ void iscrtaj_zid(){
 	glPopMatrix();
 
 }
+
+void ispisi_tekst(char * tekst, int x, int y, float r, float g, float b, int sirina_ekrana, int duzina_ekrana)
+{
+	glDisable(GL_LIGHTING);
+
+    glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+    glLoadIdentity();
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glColor4f(r, g, b, 1.0 );
+	glOrtho(0, sirina_ekrana, 0, duzina_ekrana, -1, 1);
+
+	glRasterPos2f(x, y);
+
+	int len= strlen(tekst);
+	for (int i = 0; i < len; i++) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, tekst[i]);
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glEnable(GL_LIGHTING);
+}
+

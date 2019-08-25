@@ -5,6 +5,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include <string.h>
 
 #include "objekti.h"
 
@@ -20,9 +21,9 @@ static void on_timer1(int id);
 Metak metkovi[MAX_METKOVA];
 int br_ispaljeniih_metaka=0;
 
-#define MAX_PREPREKA (255)
-Metak prepreke[MAX_PREPREKA];
-int br_poslatih_prepreka=0;
+#define MAX_PREPREKA (30)
+Prepreka prepreke[MAX_PREPREKA];
+int br_pogodjenih_prepreka=0;
 
 /* GLOBALNE PROMENLJIVE */
 
@@ -36,6 +37,7 @@ int old_y_pos = 0;
 
 int timer_id = 0;
 int timer_interval = 15;
+bool kraj_simulacije = false;
 
 
 int screen_width = 0;
@@ -96,7 +98,6 @@ int main(int argc, char * argv[])
         metkovi[i].z = -0.5;
 
     }
-
 	inicijalizuj_prepreke();
 
 	glutMainLoop();
@@ -130,6 +131,20 @@ static void on_display()
 		glTranslatef(0, 0, -20);
 		iscrtaj_zid();
 	glPopMatrix();
+
+    char str[255];
+    sprintf(str, "Metkovi: %d / %d", br_ispaljeniih_metaka, MAX_METKOVA);
+    ispisi_tekst(str, 2, 10, 0, 1, 0, screen_width, screen_height);
+    char str1[255];
+    sprintf(str1, "Br. pogodaka: %d / %d", br_pogodjenih_prepreka, MAX_PREPREKA);
+    ispisi_tekst(str1, screen_width - strlen(str1) - 210, 10, 0, 1, 0, screen_width, screen_height);
+
+    if (kraj_simulacije) {
+        char str2[255];
+        sprintf(str2, "Kraj simulacije, pogodjeno: %d", br_pogodjenih_prepreka);
+        ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
+    }
+
 	glutSwapBuffers();
 }
 
@@ -168,9 +183,11 @@ static void on_key_press(unsigned char key, int x, int y)
             break;
 	case 'k':
 	case 'K':
-		animation_ongoing=1;
-		glutTimerFunc(17, on_timer1, 0);
-		glutPostRedisplay();
+        if (!kraj_simulacije) {
+            animation_ongoing=1;
+            glutTimerFunc(17, on_timer1, 0);
+            glutPostRedisplay();
+        }
 		break;
 	}
 }
@@ -202,7 +219,7 @@ static void on_mouse_move(int x, int y)
 
 
 static void on_timer(int id) {
-    if (id != timer_id)
+    if (id != timer_id || kraj_simulacije)
         return;
 
     float parametar = 0.01;
@@ -222,12 +239,33 @@ static void on_timer(int id) {
     if (cooldown > 0)
         cooldown -= 1;
 
+
+    if (prepreke[MAX_PREPREKA-1].x < -10)
+        kraj_simulacije = true;
+    
+
+    float radius = 0.15;
+    for (int i=0; i < br_ispaljeniih_metaka; i++) {
+        for (int j=0; j < MAX_PREPREKA; j++) {
+            float x_diff = prepreke[j].x - metkovi[i].x;
+            float z_diff = prepreke[j].z - metkovi[i].z;
+
+
+            if (!prepreke[j].is_pogodjena) {
+                if (x_diff*x_diff + z_diff*z_diff < radius) {
+                    prepreke[j].is_pogodjena = true;
+                    br_pogodjenih_prepreka++;
+                }
+            }
+        }
+    }
+
     glutPostRedisplay();
     glutTimerFunc(timer_interval, on_timer, timer_id);
 }
 
 static void on_timer1(int id){
-	if(id != 0)
+	if(id != 0 || kraj_simulacije)
 		return;
 
 	azuriraj_prepreke();
