@@ -52,7 +52,7 @@ int main(int argc, char * argv[])
 
 	glutInitWindowPosition(100, 100);
 
-	glutCreateWindow("Titl programa");
+	glutCreateWindow("Reflex check");
 
 	glutDisplayFunc(on_display);
 	glutReshapeFunc(on_reshape);
