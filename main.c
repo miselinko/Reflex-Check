@@ -14,6 +14,7 @@ static void on_key_press(unsigned char key, int x, int y);
 static void on_key_release(unsigned char key, int x, int y);
 static void on_mouse_move(int x, int y);
 static void on_timer(int timer_id);
+static void on_timer1(int id);
 
 #define MAX_METKOVA (255)
 Metak metkovi[MAX_METKOVA];
@@ -36,11 +37,13 @@ int old_y_pos = 0;
 int timer_id = 0;
 int timer_interval = 15;
 
+
 int screen_width = 0;
 int screen_height = 0;
 
 float cooldown = 0;
 
+int animation_ongoing = 0;
 
 int main(int argc, char * argv[])
 {
@@ -66,6 +69,26 @@ int main(int argc, char * argv[])
 
 	glEnable(GL_DEPTH_TEST);
 
+	GLfloat light_ambient[] = { 0.2, 0.2, 0.2, 1 };
+	GLfloat light_diffuse[] = { 1, 1, 1, 1 };
+	GLfloat light_specular[] = { 1, 1, 1, 1 };
+
+	// Ambijentalno osvetljenje scene. /
+	GLfloat model_ambient[] = { 0.5, 0.5, 0.5, 1 };
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	GLfloat light_position[] = { 1, 1, 1, 0 };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, model_ambient);
+
+	// Normalizacija normala /
+	glEnable(GL_NORMALIZE);
+
+	// Pozicionira se svijetlo. /
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);	
 
     // Inicijalizacija metova i prepreka
     for (int i=0; i < MAX_METKOVA; i++) {
@@ -73,6 +96,8 @@ int main(int argc, char * argv[])
         metkovi[i].z = -0.5;
 
     }
+
+	inicijalizuj_prepreke();
 
 	glutMainLoop();
 
@@ -87,8 +112,6 @@ static void on_display()
 	glLoadIdentity();
 	gluLookAt(0, 1, 2, 0, 0, 0, 0, 1, 0);
 
-    iscrtaj_ose();
-    
     glPushMatrix();
         glTranslatef(pozicija, 0, 0);
         iscrtaj_pistolj();
@@ -100,7 +123,13 @@ static void on_display()
             iscrtaj_metak();
         glPopMatrix();
     }
-
+	nacrtaj_prepreke();
+	
+	glPushMatrix();
+		glScalef(1000, 1000, 1);
+		glTranslatef(0, 0, -20);
+		iscrtaj_zid();
+	glPopMatrix();
 	glutSwapBuffers();
 }
 
@@ -137,6 +166,12 @@ static void on_key_press(unsigned char key, int x, int y)
                 cooldown = 50;
             }
             break;
+	case 'k':
+	case 'K':
+		animation_ongoing=1;
+		glutTimerFunc(17, on_timer1, 0);
+		glutPostRedisplay();
+		break;
 	}
 }
 
@@ -181,7 +216,7 @@ static void on_timer(int id) {
 
     for (int i=0; i < br_ispaljeniih_metaka; i++) {
         if (metkovi[i].z > -100.0)
-            metkovi[i].z -= 0.02;
+            metkovi[i].z -= 0.1;
     }
 
     if (cooldown > 0)
@@ -189,4 +224,14 @@ static void on_timer(int id) {
 
     glutPostRedisplay();
     glutTimerFunc(timer_interval, on_timer, timer_id);
+}
+
+static void on_timer1(int id){
+	if(id != 0)
+		return;
+
+	azuriraj_prepreke();
+	//glutTimerFunc(50, on_timer1, 0);
+	if(animation_ongoing)
+		glutTimerFunc(17, on_timer1, 0);
 }
