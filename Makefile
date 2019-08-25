@@ -1,4 +1,4 @@
-FLAGS = -Wall -Wextra -lGL -lGLU -lglut
+FLAGS = -lGL -lGLU -lglut
 
 reflex_check.out : main.o objekti.o
 	gcc -o $@ $^ $(FLAGS)

@@ -21,7 +21,6 @@ static void on_timer1(int id);
 Metak metkovi[MAX_METKOVA];
 int br_ispaljeniih_metaka=0;
 
-#define MAX_PREPREKA (30)
 Prepreka prepreke[MAX_PREPREKA];
 int br_pogodjenih_prepreka=0;
 
