@@ -5,13 +5,14 @@
 #include <stdio.h>
 #include <string.h>
 
+//Pravio sam sve objekte koje imam u igri
+
 const float maks_brizna = 0.1;
 const float korak_mete = 3;
 float brzina_mete = 0.02;
 Prepreka prepreke[MAX_PREPREKA];
 
-void iscrtaj_ose() 
-{
+void iscrtaj_ose() {
     glBegin(GL_LINES);
         glColor3f(1, 0, 0);
         glVertex3f(1, 0, 0);
@@ -44,8 +45,8 @@ void iscrtaj_ose()
 
 }
 
-void iscrtaj_pistolj()
-{
+void iscrtaj_pistolj() {
+
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
     	GLfloat diffuse_coeffs[] = { 0.3, 0.3, 0.3, 1 };
     	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
@@ -56,20 +57,21 @@ void iscrtaj_pistolj()
     	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_coeffs);
     	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
-    glPushMatrix();
-    glColor3f(0, 0, 1);
+    	glPushMatrix();
+	glColor3f(0, 0, 1);
 
-    glPushMatrix();
-        glScalef(0.2, 0.2, 1);
-        glutSolidCube(1);
-    glPopMatrix();
+    	glPushMatrix();
+        	glScalef(0.2, 0.2, 1);
+        	glutSolidCube(1);
+    	glPopMatrix();
 
-    glPushMatrix();
-        glTranslatef(0, -0.15, 0.5);
-        glScalef(0.2, 0.5, 0.2);
-        glutSolidCube(1);
-    glPopMatrix();
-    glPopMatrix();
+    	glPushMatrix();
+        	glTranslatef(0, -0.15, 0.5);
+        	glScalef(0.2, 0.5, 0.2);
+        	glutSolidCube(1);
+    	glPopMatrix();
+    
+	glPopMatrix();
 }
 
 
@@ -85,15 +87,17 @@ void iscrtaj_metak()
     	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_coeffs);
     	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
-    glPushMatrix();
-        glColor3f(1,0,0);
+    	glPushMatrix();
+
+	glColor3f(1,0,0);
         const static GLdouble plane[] = { 0, 0, -1, 0 };
         glClipPlane(GL_CLIP_PLANE0, plane);
         glEnable(GL_CLIP_PLANE0);
         glScalef(0.1, 0.1, 0.15);
         glutSolidSphere(1, 30, 30);
         glDisable(GL_CLIP_PLANE0);
-    glPopMatrix();
+    	
+	glPopMatrix();
 }
 
 Prepreka napravi_prepreke(){
