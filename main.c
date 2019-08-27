@@ -142,16 +142,25 @@ static void on_display()
     		sprintf(str1, "Br. pogodaka: %d / %d", br_pogodjenih_prepreka, MAX_PREPREKA);
    		ispisi_tekst(str1, screen_width - strlen(str1) - 210, 10, 0, 1, 0, screen_width, screen_height);
 
-		if (kraj_simulacije) {
+		if (kraj_simulacije || br_pogodjenih_prepreka==10) {
 			glPushMatrix();
 				glScalef(1000, 1000, 1);
 				glTranslatef(0, 0, 1);
 				iscrtaj_zid();
 			glPopMatrix();
-
-        		char str2[255];
-        		sprintf(str2, "Kraj simulacije, pogodjeno: %d", br_pogodjenih_prepreka);
-			ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
+			
+			if(br_pogodjenih_prepreka==10){
+				char str2[255];
+				sprintf(str2, "Pobedio si, pogodjeno: %d", br_pogodjenih_prepreka);
+				ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-5, 0, 1, 0, screen_width, screen_height);
+				ispisi_tekst("          ESC - izlaz ", screen_width/2 - strlen(str1) - 120, screen_height/2-40, 0, 1, 0, screen_width, screen_height);
+			}
+			else{	
+        			char str2[255];
+        			sprintf(str2, "Izgubio si, pogodjeno: %d", br_pogodjenih_prepreka);
+				ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-5, 0, 1, 0, screen_width, screen_height);
+				ispisi_tekst("          ESC - izlaz ", screen_width/2 - strlen(str1) - 120, screen_height/2-40, 0, 1, 0, screen_width, screen_height);
+			}
 		}
 	}
 

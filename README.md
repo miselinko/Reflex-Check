@@ -2,7 +2,7 @@
 
 ## Reflex check
 
-- Cilj igre je pogoditi što više prepreka
+- Cilj igre je pogoditi 10 prepreka
 
 ## Komande
 
