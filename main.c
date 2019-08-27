@@ -69,7 +69,7 @@ int main(int argc, char * argv[])
 	GLfloat light_ambient[] = { 0.2, 0.2, 0.2, 1 };
 	GLfloat light_diffuse[] = { 1, 1, 1, 1 };
 	GLfloat light_specular[] = { 1, 1, 1, 1 };
-
+	
 	// Ambijentalno osvetljenje scene. 
 	GLfloat model_ambient[] = { 0.5, 0.5, 0.5, 1 };
 
@@ -86,7 +86,7 @@ int main(int argc, char * argv[])
 
 	// Pozicionira se svijetlo 
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);	
-
+	
 	   
 	// Inicijalizacija metkova i prepreka
 	for (int i=0; i < MAX_METKOVA; i++) {
@@ -126,6 +126,7 @@ static void on_display()
 	//Prepreke
 	nacrtaj_prepreke();
 	
+	//Zid
 	glPushMatrix();
 		glScalef(1000, 1000, 1);
 		glTranslatef(0, 0, -20);
@@ -133,19 +134,47 @@ static void on_display()
 	glPopMatrix();
 
 	//Tekst
-   	char str[255];
-   	sprintf(str, "Metkovi: %d / %d", br_ispaljeniih_metaka, MAX_METKOVA);
-    	ispisi_tekst(str, 2, 10, 0, 1, 0, screen_width, screen_height);
-    	char str1[255];
-    	sprintf(str1, "Br. pogodaka: %d / %d", br_pogodjenih_prepreka, MAX_PREPREKA);
-   	ispisi_tekst(str1, screen_width - strlen(str1) - 210, 10, 0, 1, 0, screen_width, screen_height);
+	if(animation_ongoing){
+   		char str[255];
+   		sprintf(str, "Metkovi: %d / %d", br_ispaljeniih_metaka, MAX_METKOVA);
+    		ispisi_tekst(str, 2, 10, 0, 1, 0, screen_width, screen_height);
+    		char str1[255];
+    		sprintf(str1, "Br. pogodaka: %d / %d", br_pogodjenih_prepreka, MAX_PREPREKA);
+   		ispisi_tekst(str1, screen_width - strlen(str1) - 210, 10, 0, 1, 0, screen_width, screen_height);
 
-	if (kraj_simulacije) {
-        	char str2[255];
-        	sprintf(str2, "Kraj simulacije, pogodjeno: %d", br_pogodjenih_prepreka);
-		ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
+		if (kraj_simulacije) {
+			glPushMatrix();
+				glScalef(1000, 1000, 1);
+				glTranslatef(0, 0, 1);
+				iscrtaj_zid();
+			glPopMatrix();
+
+        		char str2[255];
+        		sprintf(str2, "Kraj simulacije, pogodjeno: %d", br_pogodjenih_prepreka);
+			ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
+		}
 	}
 
+	if(!animation_ongoing){
+		glPushMatrix();
+			glScalef(1000, 1000, 1);
+			glTranslatef(0, 0, 1);
+			iscrtaj_zid();
+		glPopMatrix();
+
+		char str1[255] = "'K/k' - Pokretanje simulacije";
+		ispisi_tekst(str1, screen_width/2 - strlen(str1) - 120, screen_height/2+67, 0, 1, 0, screen_width, screen_height);
+
+		char str2[255] = "'D/d' - Pomeranje pištolja desno";
+		ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
+
+		char str3[255] = "'A/a' - Pomeranje pištolja levo";
+		ispisi_tekst(str3, screen_width/2 - strlen(str1) - 120, screen_height/2+17, 0, 1, 0, screen_width, screen_height);
+
+		char str4[255] = "'G/g' - Ispaljivanje metkova";
+		ispisi_tekst(str4, screen_width/2 - strlen(str1) - 120, screen_height/2-36, 0, 1, 0, screen_width, screen_height);
+
+	}
 	glutSwapBuffers();
 }
 

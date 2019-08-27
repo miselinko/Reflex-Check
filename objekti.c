@@ -70,7 +70,77 @@ void iscrtaj_pistolj() {
         	glScalef(0.2, 0.5, 0.2);
         	glutSolidCube(1);
     	glPopMatrix();
-    
+    	
+	glPushMatrix();
+        	glTranslatef(0, 0.04, 0.5);
+        	glScalef(0.1, 0.2, 0.25);
+        	glutSolidCube(1);
+    	glPopMatrix();
+    	
+	glPushMatrix();
+        	glTranslatef(0, 0.04, -0.43);
+        	glScalef(0.03, 0.17, 0.07);
+        	glutSolidCube(1);
+    	glPopMatrix();
+    	
+	glPushMatrix();
+        	glTranslatef(0, -0.1, 0.31);
+        	glScalef(0.03, 0.17, 0.05);
+        	glutSolidCube(1);
+    	glPopMatrix();
+    	
+	glPushMatrix();
+        	glTranslatef(0, -0.22, 0.5);
+        	glScalef(0.22, 0.3, 0.15);
+        	glutSolidCube(1);
+    	glPopMatrix();
+    	
+	glPushMatrix();
+		glTranslatef(0, 0.04, 0.05);
+        	glScalef(0.22, 0.02, 1.1);
+        	glutSolidCube(1);
+    	glPopMatrix();
+	
+	glPushMatrix();
+		glTranslatef(0, 0, 0.05);
+        	glScalef(0.22, 0.02, 1.1);
+        	glutSolidCube(1);
+    	glPopMatrix();
+	
+	
+	
+
+	glPushMatrix();
+		glTranslatef(0.1, -0.1, 0.45);
+		glutSolidSphere(0.025,16,16);
+	glPopMatrix();
+			
+	glPushMatrix();
+		glTranslatef(0.1, -0.15, 0.45);
+		glutSolidSphere(0.025,16,16);
+	glPopMatrix();
+	
+	glPushMatrix();
+		glTranslatef(0.1, -0.2, 0.45);
+		glutSolidSphere(0.025,16,16);
+	glPopMatrix();
+		
+	glPushMatrix();
+		glTranslatef(-0.1, -0.1, 0.45);
+		glutSolidSphere(0.025,16,16);
+	glPopMatrix();
+			
+	glPushMatrix();
+		glTranslatef(-0.1, -0.15, 0.45);
+		glutSolidSphere(0.025,16,16);
+	glPopMatrix();
+	
+	glPushMatrix();
+		glTranslatef(-0.1, -0.2, 0.45);
+		glutSolidSphere(0.025,16,16);
+	glPopMatrix();
+		
+	
 	glPopMatrix();
 }
 
@@ -138,12 +208,13 @@ void nacrtaj_prepreke(){
     	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
 	for(int i=0;i<MAX_PREPREKA;i++){
-        if (!prepreke[i].is_pogodjena) {
-            glPushMatrix();
-                glTranslatef(prepreke[i].x, 0,prepreke[i].z );
-                glutSolidCube(0.25);
+        	if (!prepreke[i].is_pogodjena) {
+            	glPushMatrix();
+                	glTranslatef(prepreke[i].x, 0,prepreke[i].z );
+                	glutSolidCube(0.25);
+			glutSolidSphere(0.13,15,15);
       		glPopMatrix();
-        }
+        	}
 	}
 }
 
@@ -163,25 +234,26 @@ void iscrtaj_zid(){
 	glMaterialfv(GL_FRONT, GL_EMISSION, material_emission);
 
 	glPushMatrix();
-	glBegin(GL_QUADS);
-	glColor3f(1, 0, 0);
-	glNormal3f(0, 0, 1);
-        glVertex3f(-0.5, 0.5, 0);
-        glVertex3f(0.5, 0.5, 0);
-        glVertex3f(0.5, -0.5, 0);
-        glVertex3f(-0.5, -0.5, 0);
-	glEnd();
+		glBegin(GL_QUADS);
+		glColor3f(1, 0, 0);
+		glNormal3f(0, 0, 1);
+        	glVertex3f(-0.5, 0.5, 0);
+        	glVertex3f(0.5, 0.5, 0);
+        	glVertex3f(0.5, -0.5, 0);
+        	glVertex3f(-0.5, -0.5, 0);
+		glEnd();
 	glPopMatrix();
-
+	
+	
 }
 
 void ispisi_tekst(char * tekst, int x, int y, float r, float g, float b, int sirina_ekrana, int duzina_ekrana)
 {
 	glDisable(GL_LIGHTING);
 
-    glMatrixMode(GL_MODELVIEW);
+    	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-    glLoadIdentity();
+   	glLoadIdentity();
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
