@@ -174,10 +174,10 @@ static void on_display()
 		char str1[255] = "'K/k' - Pokretanje simulacije";
 		ispisi_tekst(str1, screen_width/2 - strlen(str1) - 120, screen_height/2+67, 0, 1, 0, screen_width, screen_height);
 
-		char str2[255] = "'D/d' - Pomeranje pištolja desno";
+		char str2[255] = "'D/d' - Pomeranje pistolja desno";
 		ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
 
-		char str3[255] = "'A/a' - Pomeranje pištolja levo";
+		char str3[255] = "'A/a' - Pomeranje pistolja levo";
 		ispisi_tekst(str3, screen_width/2 - strlen(str1) - 120, screen_height/2+17, 0, 1, 0, screen_width, screen_height);
 
 		char str4[255] = "'G/g' - Ispaljivanje metkova";
