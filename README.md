@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # RG134-reflex-check
-Reflex check
-=======
-# RG127-reflex-check
 
 ## Reflex check
 
@@ -14,4 +10,3 @@ Reflex check
 - 'D/d' - Pomeranje pištolja desno
 - 'K/k' - Pokretanje simulacije
 - 'G/g' - Ispaljivanje metkova
->>>>>>> r1remote/master

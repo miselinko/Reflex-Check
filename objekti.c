@@ -10,6 +10,7 @@
 const float maks_brizna = 0.1;
 const float korak_mete = 3;
 float brzina_mete = 0.02;
+float parametarPom = 0.1;
 Prepreka prepreke[MAX_PREPREKA];
 
 void iscrtaj_ose() {
@@ -174,6 +175,8 @@ Prepreka napravi_prepreke(){
 	Prepreka tmp;
     	tmp.x =  -10;
     	tmp.z = -5;
+	tmp.pogodjena_parametar = 0;
+        tmp.is_pogodjena = false;
     
     	return tmp;
 }
@@ -198,7 +201,7 @@ void azuriraj_prepreke(){
 
 void nacrtaj_prepreke(){
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
-    	GLfloat diffuse_coeffs[] = { 0.3, 0.3, 1, 1 };
+    	GLfloat diffuse_coeffs[] = { 0.1, 0.4, 1, 1 };
     	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
 	GLfloat shininess = 0.3*128;
 	
@@ -211,10 +214,31 @@ void nacrtaj_prepreke(){
         	if (!prepreke[i].is_pogodjena) {
             	glPushMatrix();
                 	glTranslatef(prepreke[i].x, 0,prepreke[i].z );
-                	glutSolidCube(0.25);
-			glutSolidSphere(0.13,15,15);
+                	glutSolidCube(0.3);
+			glutSolidSphere(0.17,15,15);
+			glutWireCone(0.22, 0.22, 15, 1);
+			glRotatef(parametarPom*10, 1,0,0);
+			glScalef(0.3, 0.3, 0.3);			
+			glutWireIcosahedron();
+			parametarPom += 0.01;
       		glPopMatrix();
-        	}
+        	} 
+		else {
+		        if (prepreke[i].pogodjena_parametar <= 1) {
+		            glPushMatrix();
+		                glTranslatef(prepreke[i].x, -prepreke[i].pogodjena_parametar*5,prepreke[i].z );
+				glRotatef(prepreke[i].pogodjena_parametar*193, 1,0,0);
+		                glutSolidCube(0.3);
+				glutSolidSphere(0.17,15,15);
+				glutWireCone(0.22, 0.22, 15, 1);
+				glRotatef(parametarPom*10, 1,0,0);
+				glScalef(0.3, 0.3, 0.3);			
+				glutWireIcosahedron();
+				parametarPom += 0.01;
+		                prepreke[i].pogodjena_parametar += 0.01;
+		            glPopMatrix();
+		        }	
+		}
 	}
 }
 

@@ -276,7 +276,7 @@ static void on_timer(int id) {
         	kraj_simulacije = true;
     
 	//Sudar prereke i metka
-	float radius = 0.15;
+	float radius = 0.16;
 	for (int i=0; i < br_ispaljeniih_metaka; i++) {
 		for (int j=0; j < MAX_PREPREKA; j++) {
 			float x_diff = prepreke[j].x - metkovi[i].x;

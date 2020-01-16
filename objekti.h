@@ -14,6 +14,7 @@ typedef struct {
     float x;
     float z;
     bool is_pogodjena;
+    float pogodjena_parametar;
 }Prepreka;
 
 void iscrtaj_ose(); 
