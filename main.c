@@ -33,7 +33,7 @@ bool go_right = false;
 int timer_id = 0;
 int timer_interval = 15;
 bool kraj_simulacije = false;
-
+double parametar1 = 0;
 
 int screen_width = 0;
 int screen_height = 0;
@@ -94,6 +94,9 @@ int main(int argc, char * argv[])
 		metkovi[i].z = -0.5;
 	}
 
+	/* Obavlja se OpenGL inicijalizacija */
+	glClearColor(0.4, 0.4, 0.4, 0);
+
 	inicijalizuj_prepreke();
 
 	glutMainLoop();
@@ -107,7 +110,7 @@ static void on_display()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0, 1, 2, 0, 0, 0, 0, 1, 0);
+	gluLookAt(0, 1, 0 + parametar1, 0, 0, 0, 0, 1, 0);
 	
 	//Pistolj
     	glPushMatrix();
@@ -134,7 +137,10 @@ static void on_display()
 	glPopMatrix();
 
 	//Tekst
-	if(animation_ongoing){
+	if(animation_ongoing && parametar1>=2){
+		char string[255] = "-  R E F L E X    C H E C K  -";
+		ispisi_tekst(string, screen_width/2 - strlen(string) - 135, screen_height/2+277, 0, 1, 0, screen_width, screen_height);
+
    		char str[255];
    		sprintf(str, "Metkovi: %d / %d", br_ispaljeniih_metaka, MAX_METKOVA);
     		ispisi_tekst(str, 2, 10, 0, 1, 0, screen_width, screen_height);
@@ -171,17 +177,24 @@ static void on_display()
 			iscrtaj_zid();
 		glPopMatrix();
 
-		char str1[255] = "'K/k' - Pokretanje simulacije";
-		ispisi_tekst(str1, screen_width/2 - strlen(str1) - 120, screen_height/2+67, 0, 1, 0, screen_width, screen_height);
+		char str[255] = "    -  R E F L E X    C H E C K  -";
+		ispisi_tekst(str, screen_width/2 - strlen(str) - 135, screen_height/2+167, 0, 1, 0, screen_width, screen_height);
 
-		char str2[255] = "'D/d' - Pomeranje pistolja desno";
-		ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
 
-		char str3[255] = "'A/a' - Pomeranje pistolja levo";
-		ispisi_tekst(str3, screen_width/2 - strlen(str1) - 120, screen_height/2+17, 0, 1, 0, screen_width, screen_height);
+		char str1[255] = "'K/k' - Pokretanje/nastavak simulacije";
+		ispisi_tekst(str1, screen_width/2 - strlen(str1) - 135, screen_height/2+77, 0, 1, 0, screen_width, screen_height);
 
-		char str4[255] = "'G/g' - Ispaljivanje metkova";
-		ispisi_tekst(str4, screen_width/2 - strlen(str1) - 120, screen_height/2-36, 0, 1, 0, screen_width, screen_height);
+		char str2[255] = "'P/p' - Pauza simulacije";
+		ispisi_tekst(str2, screen_width/2 - strlen(str1) - 135, screen_height/2+47, 0, 1, 0, screen_width, screen_height);
+
+		char str3[255] = "'D/d' - Pomeranje pistolja desno";
+		ispisi_tekst(str3, screen_width/2 - strlen(str1) - 135, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
+
+		char str4[255] = "'A/a' - Pomeranje pistolja levo";
+		ispisi_tekst(str4, screen_width/2 - strlen(str1) - 135, screen_height/2-39, 0, 1, 0, screen_width, screen_height);
+
+		char str5[255] = "'G/g' - Ispaljivanje metkova";
+		ispisi_tekst(str5, screen_width/2 - strlen(str1) - 135, screen_height/2-66, 0, 1, 0, screen_width, screen_height);
 
 	}
 	glutSwapBuffers();
@@ -229,6 +242,11 @@ static void on_key_press(unsigned char key, int x, int y)
             		glutPostRedisplay();
         	}
 		break;
+	//Pauza
+	case 'p':
+	case 'P':
+		animation_ongoing = !animation_ongoing;
+		break;
 	}
 }
 
@@ -253,6 +271,13 @@ static void on_key_release(unsigned char key, int x, int y) {
 static void on_timer(int id) {
    	if (id != timer_id || kraj_simulacije)
         	return;
+	
+	//Parametar1 za tacku pogleda
+    	if(animation_ongoing){
+		parametar1 += 0.01;
+		if(parametar1 >= 2)
+		    parametar1 = 2;
+        }
 
 	float parametar = 0.01;
 	if (go_left && !go_right) {
