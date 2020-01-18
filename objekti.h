@@ -26,5 +26,7 @@ void azuriraj_prepreke();
 void nacrtaj_prepreke();
 void iscrtaj_zid();
 void ispisi_tekst(char * tekst, int x, int y, float r, float g, float b, int sirina_ekrana, int duzina_ekrana);
+void initialize();
 
 #endif
+

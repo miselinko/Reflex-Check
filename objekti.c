@@ -3,9 +3,11 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <stdio.h>
+#include "image.h"
 #include <string.h>
 
 //Pravio sam sve objekte koje imam u igri
+//Imena funkcija nam ukazuju o kojim objektima se radi
 
 const float maks_brizna = 0.1;
 const float korak_mete = 3;
@@ -13,6 +15,9 @@ float brzina_mete = 0.02;
 float parametarPom = 0.1;
 Prepreka prepreke[MAX_PREPREKA];
 
+GLuint wall_texture_name;
+
+//Pomocna funkcija za iscrtavanje kordinatnog sistema
 void iscrtaj_ose() {
     glBegin(GL_LINES);
         glColor3f(1, 0, 0);
@@ -46,6 +51,7 @@ void iscrtaj_ose() {
 
 }
 
+//Funkcija za crtanje pistolja
 void iscrtaj_pistolj() {
 
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
@@ -145,11 +151,11 @@ void iscrtaj_pistolj() {
 	glPopMatrix();
 }
 
-
+//Funkcija za crtanje metkova
 void iscrtaj_metak() 
 {
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
-    	GLfloat diffuse_coeffs[] = { 1.0, 0.3, 0.2, 1 };
+    	GLfloat diffuse_coeffs[] = { 1.0, 0.6, 0.1, 1 };
     	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
 	GLfloat shininess = 0.3*128;
 	
@@ -171,11 +177,13 @@ void iscrtaj_metak()
 	glPopMatrix();
 }
 
+
+//Funkcije za prepreke
 Prepreka napravi_prepreke(){
 	Prepreka tmp;
     	tmp.x =  -10;
     	tmp.z = -5;
-	tmp.pogodjena_parametar = 0;
+        tmp.pogodjena_parametar = 0;
         tmp.is_pogodjena = false;
     
     	return tmp;
@@ -192,7 +200,7 @@ void azuriraj_prepreke(){
 	int i;
 
 	if(brzina_mete < 0.1)
-		brzina_mete += 0.0001;
+		brzina_mete += 0.00005;
 
 	for (i = 0; i < MAX_PREPREKA; i++) {
         	prepreke[i].x -= brzina_mete;
@@ -242,11 +250,64 @@ void nacrtaj_prepreke(){
 	}
 }
 
+//Sto se tice tekstura, koristio sam kodove sa vezbi, naravno uz izmene i prilagodjeno projektu
+void initialize()
+{
+    /* Objekat koji predstavlja teskturu ucitanu iz fajla. */
+    Image * image;
+
+    /* Postavlja se boja pozadine. */
+    glClearColor(0, 0, 0, 0);
+
+    /* Ukljucuje se testiranje z-koordinate piksela. */
+    glEnable(GL_DEPTH_TEST);
+
+    /* Ukljucuju se teksture. */
+    glEnable(GL_TEXTURE_2D);
+
+    glTexEnvf(GL_TEXTURE_ENV,
+              GL_TEXTURE_ENV_MODE,
+              GL_REPLACE);
+
+    /*
+     * Inicijalizuje se objekat koji ce sadrzati teksture ucitane iz
+     * fajla.
+     */
+    image = image_init(0, 0);
+
+    /* Kreira se prva tekstura. */
+    image_read(image, "images.bmp");
+
+    /* Generisu se identifikatori tekstura. */
+    glGenTextures(1, &wall_texture_name);
+
+    glBindTexture(GL_TEXTURE_2D, wall_texture_name);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+
+    /* Iskljucujemo aktivnu teksturu */
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    /* Unistava se objekat za citanje tekstura iz fajla. */
+    image_done(image);
+}
+
+
+//Funkcija za crtanje zida
 void iscrtaj_zid(){
 	const static GLfloat material_emission[] = { 0.15, 0.15, 0.15, 1 };
     	
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
-    	GLfloat diffuse_coeffs[] = { 0.8, 0.1, 0.8, 1 };
+    	GLfloat diffuse_coeffs[] = { 0.6, 0.6, 0.6, 1 };
     	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
 	GLfloat shininess = 0.3*128;
 	
@@ -257,20 +318,30 @@ void iscrtaj_zid(){
 	
 	glMaterialfv(GL_FRONT, GL_EMISSION, material_emission);
 
+
 	glPushMatrix();
 		glBegin(GL_QUADS);
-		glColor3f(1, 0, 0);
-		glNormal3f(0, 0, 1);
-        	glVertex3f(-0.5, 0.5, 0);
-        	glVertex3f(0.5, 0.5, 0);
-        	glVertex3f(0.5, -0.5, 0);
-        	glVertex3f(-0.5, -0.5, 0);
+
+		    glColor3f(1, 0, 0);
+		    glNormal3f(0, 0, 1);
+
+		    glTexCoord2f(0 ,1);
+		    	glVertex3f(-0.5, 0.5, 0);
+
+		    glTexCoord2f(1 ,1);
+			glVertex3f(0.5, 0.5, 0);
+
+		    glTexCoord2f(1 ,0);
+			glVertex3f(0.5, -0.5, 0);
+
+		    glTexCoord2f(0 ,0);
+			glVertex3f(-0.5, -0.5, 0);
+
 		glEnd();
 	glPopMatrix();
-	
-	
 }
 
+//Funkcija za ispis teksta
 void ispisi_tekst(char * tekst, int x, int y, float r, float g, float b, int sirina_ekrana, int duzina_ekrana)
 {
 	glDisable(GL_LIGHTING);
