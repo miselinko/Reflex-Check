@@ -185,6 +185,7 @@ Prepreka napravi_prepreke(){
     	tmp.z = -5;
         tmp.pogodjena_parametar = 0;
         tmp.is_pogodjena = false;
+	tmp.pogodjena_parametar1 = 1;
     
     	return tmp;
 }
@@ -200,7 +201,7 @@ void azuriraj_prepreke(){
 	int i;
 
 	if(brzina_mete < 0.1)
-		brzina_mete += 0.00005;
+		brzina_mete += 0.00008;
 
 	for (i = 0; i < MAX_PREPREKA; i++) {
         	prepreke[i].x -= brzina_mete;
@@ -224,7 +225,7 @@ void nacrtaj_prepreke(){
                 	glTranslatef(prepreke[i].x, 0,prepreke[i].z );
                 	glutSolidCube(0.3);
 			glutSolidSphere(0.17,15,15);
-			glutWireCone(0.22, 0.22, 15, 1);
+			glutWireCone(0.24, 0.24, 15, 1);
 			glRotatef(parametarPom*10, 1,0,0);
 			glScalef(0.3, 0.3, 0.3);			
 			glutWireIcosahedron();
@@ -235,13 +236,18 @@ void nacrtaj_prepreke(){
 		        if (prepreke[i].pogodjena_parametar <= 1) {
 		            glPushMatrix();
 		                glTranslatef(prepreke[i].x, -prepreke[i].pogodjena_parametar*5,prepreke[i].z );
-				glRotatef(prepreke[i].pogodjena_parametar*193, 1,0,0);
-		                glutSolidCube(0.3);
-				glutSolidSphere(0.17,15,15);
-				glutWireCone(0.22, 0.22, 15, 1);
+				glRotatef(prepreke[i].pogodjena_parametar*193, 1,0,1);
+		                glutSolidCube(0.3*prepreke[i].pogodjena_parametar1);
+				glutSolidSphere(0.17*prepreke[i].pogodjena_parametar1,15,15);
+				glutWireCone(0.24*prepreke[i].pogodjena_parametar1, 0.24, 15, 1);
 				glRotatef(parametarPom*10, 1,0,0);
-				glScalef(0.3, 0.3, 0.3);			
+				glScalef(0.3*prepreke[i].pogodjena_parametar1, 0.3*prepreke[i].pogodjena_parametar1, 0.3*prepreke[i].pogodjena_parametar1);			
 				glutWireIcosahedron();
+
+				if(prepreke[i].pogodjena_parametar1>0){
+					prepreke[i].pogodjena_parametar1-=0.005;
+				}
+
 				parametarPom += 0.01;
 		                prepreke[i].pogodjena_parametar += 0.01;
 		            glPopMatrix();

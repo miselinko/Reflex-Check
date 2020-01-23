@@ -158,7 +158,7 @@ static void on_display()
 	//Tekst
 	if(animation_ongoing  && parametar1>=2){
 		char string[255] = "-  R E F L E X    C H E C K  -";
-		ispisi_tekst(string, screen_width/2 - strlen(string) - 135, screen_height/2+277, 0, 1, 0, screen_width, screen_height);
+		ispisi_tekst(string, screen_width/2 - strlen(string) - 135, screen_height-30, 0, 1, 0, screen_width, screen_height);
 
    		char str[255];
    		sprintf(str, "Metkovi: %d / %d", br_ispaljeniih_metaka, MAX_METKOVA);
@@ -175,16 +175,59 @@ static void on_display()
 			glPopMatrix();
 			
 			if(br_pogodjenih_prepreka==10){
+				double pom = 0.1;
+				double pom1 = 0.1;
+
+				char string[255] = "*************************";
+				ispisi_tekst(string, screen_width/2 - strlen(string) - 145, screen_height/2+20, 0, 1, 0, screen_width, screen_height);
+
+				
+				for(int i=0;i<5;i++){
+					char string[255] = "*";
+					ispisi_tekst(string, screen_width/2 - strlen(string) - 168, screen_height/2+5-pom, 0, 1, 0, screen_width, screen_height);
+					pom +=15;
+				}
+				
+				for(int i=0;i<5;i++){
+					char string[255] = "*";
+					ispisi_tekst(string, screen_width/2 - strlen(string) + 119, screen_height/2+5-pom1, 0, 1, 0, screen_width, screen_height);
+					pom1 +=15;
+				}
+
 				char str2[255];
 				sprintf(str2, "Pobedio si, pogodjeno: %d", br_pogodjenih_prepreka);
 				ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-5, 0, 1, 0, screen_width, screen_height);
 				ispisi_tekst("          ESC - izlaz ", screen_width/2 - strlen(str1) - 120, screen_height/2-40, 0, 1, 0, screen_width, screen_height);
+
+				char string1[255] = "*************************";
+				ispisi_tekst(string1, screen_width/2 - strlen(string1) - 143, screen_height/2-75, 0, 1, 0, screen_width, screen_height);
 			}
 			else{	
+				double pom = 0.1;
+				double pom1 = 0.1;
+
+				char string[255] = "*************************";
+				ispisi_tekst(string, screen_width/2 - strlen(string) - 145, screen_height/2+20, 0, 1, 0, screen_width, screen_height);
+
+				for(int i=0;i<5;i++){
+					char string[255] = "*";
+					ispisi_tekst(string, screen_width/2 - strlen(string) - 168, screen_height/2+5-pom, 0, 1, 0, screen_width, screen_height);
+					pom +=15;
+				}
+				
+				for(int i=0;i<5;i++){
+					char string[255] = "*";
+					ispisi_tekst(string, screen_width/2 - strlen(string) + 119, screen_height/2+5-pom1, 0, 1, 0, screen_width, screen_height);
+					pom1 +=15;
+				}
+
         			char str2[255];
         			sprintf(str2, "Izgubio si, pogodjeno: %d", br_pogodjenih_prepreka);
 				ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-5, 0, 1, 0, screen_width, screen_height);
 				ispisi_tekst("          ESC - izlaz ", screen_width/2 - strlen(str1) - 120, screen_height/2-40, 0, 1, 0, screen_width, screen_height);
+
+				char string1[255] = "*************************";
+				ispisi_tekst(string1, screen_width/2 - strlen(string1) - 143, screen_height/2-75, 0, 1, 0, screen_width, screen_height);
 			}
 		}
 	}
@@ -195,6 +238,23 @@ static void on_display()
 			glTranslatef(0, 0, 1);
 			iscrtaj_zid();
 		glPopMatrix();
+		double pom = 0.1;
+		double pom1 = 0.1;
+
+		char string[255] = "**************************************";
+		ispisi_tekst(string, screen_width/2 - strlen(string) - 185, screen_height/2+205, 0, 1, 0, screen_width, screen_height);
+
+		for(int i=0;i<23;i++){
+			char string[255] = "*";
+			ispisi_tekst(string, screen_width/2 - strlen(string) - 236, screen_height/2+205-pom, 0, 1, 0, screen_width, screen_height);
+			pom +=15;
+		}
+
+		for(int i=0;i<23;i++){
+			char string[255] = "*";
+			ispisi_tekst(string, screen_width/2 - strlen(string) + 236, screen_height/2+205-pom1, 0, 1, 0, screen_width, screen_height);
+			pom1 +=15;
+		}
 
 		char str[255] = "    -  R E F L E X    C H E C K  -";
 		ispisi_tekst(str, screen_width/2 - strlen(str) - 135, screen_height/2+167, 0, 1, 0, screen_width, screen_height);
@@ -214,6 +274,9 @@ static void on_display()
 
 		char str5[255] = "'G/g' - Ispaljivanje metkova";
 		ispisi_tekst(str5, screen_width/2 - strlen(str1) - 135, screen_height/2-66, 0, 1, 0, screen_width, screen_height);
+
+		char string1[255] = "**************************************";
+		ispisi_tekst(string, screen_width/2 - strlen(string1) - 185, screen_height/2-125, 0, 1, 0, screen_width, screen_height);
 
 	}
 
@@ -266,7 +329,7 @@ static void on_key_press(unsigned char key, int x, int y)
 		//Pokretanje simulacije
 		case 'k':
 		case 'K':
-			if (!kraj_simulacije) {
+			if (!kraj_simulacije && animation_ongoing==0) {
 		    		animation_ongoing=1;
 		    		glutTimerFunc(17, on_timer1, 0);
 		    		glutPostRedisplay();
