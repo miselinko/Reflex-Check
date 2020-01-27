@@ -165,7 +165,7 @@ static void on_display()
 
 		//Ispisujemo u donjem levom uglu broj_ispaljenih/broj_ukupno metaka
    		char str[255];
-   		sprintf(str, "Metkovi: %d / %d", br_ispaljeniih_metaka, MAX_METKOVA);
+   		sprintf(str, "Br. metaka: %d / %d", br_ispaljeniih_metaka, MAX_METKOVA);
     		ispisi_tekst(str, 2, 10, 0, 1, 0, screen_width, screen_height);
 
 		//Ispisujemo u donjem desnom uglu broj_pogodaka/broj_preostalih prepreka 
