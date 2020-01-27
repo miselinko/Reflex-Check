@@ -36,8 +36,7 @@ bool go_right = false;
 int timer_id = 0;
 int timer_interval = 15;
 bool kraj_simulacije = false;
-double parametar1 = 0;
-
+double parametar1 = 0;//Parametar za tacku pogleda
 
 int screen_width = 0;
 int screen_height = 0;
@@ -90,7 +89,7 @@ int main(int argc, char * argv[])
 	
 	initialize();   
 
-	/* Inicijalizacija metkova i prepreka */
+	/* Inicijalizacija metaka i prepreka */
 	for (int i=0; i < MAX_METKOVA; i++) {
 		metkovi[i].x = 0;
 		metkovi[i].z = -0.5;
@@ -117,13 +116,13 @@ static void on_display()
 	glLoadIdentity();
 	gluLookAt(0, 1, 0 + parametar1, 0, 0, 0, 0, 1, 0);
 	
-	//Pistolj
+	//Krira se pistolj
     	glPushMatrix();
         	glTranslatef(pozicija, 0, 0);
         	iscrtaj_pistolj();
     	glPopMatrix();
 
-	//Metak
+	//Kreira se metak
     	for (int i=0; i < br_ispaljeniih_metaka; i++) {
         	glPushMatrix();
         	    	glTranslatef(metkovi[i].x,0,metkovi[i].z);
@@ -131,10 +130,10 @@ static void on_display()
         	glPopMatrix();
     	}
 
-	//Prepreke
+	//Kreiraju se prepreke
 	nacrtaj_prepreke();
 	
-	//Zid
+	//Kreira se zid i postavljaju se teksture
     	glBindTexture(GL_TEXTURE_2D, wall_texture_name);
         glPushMatrix();
             glScalef(110, 110, 1);
@@ -145,7 +144,7 @@ static void on_display()
         glPopMatrix();
     	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// Pod
+	//Kreira se pod i postavljaju se teksture
 	glBindTexture(GL_TEXTURE_2D, wall_texture_name);
 	glPushMatrix();
 		glTranslatef(0,-24,0);
@@ -155,126 +154,166 @@ static void on_display()
 	glPopMatrix();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
-	//Tekst
+	//Ispisivanje teksta
+	//Prvo ispisujemo tekst kada je simulacija aktivna 
+	//i kada je parametar1 veci ili jednak 2,
+	//parametar1 nam sluzi za tacku pogleda 
 	if(animation_ongoing  && parametar1>=2){
+		//Ispisujemo naslov na vrhu ekrana
 		char string[255] = "-  R E F L E X    C H E C K  -";
 		ispisi_tekst(string, screen_width/2 - strlen(string) - 135, screen_height-30, 0, 1, 0, screen_width, screen_height);
 
+		//Ispisujemo u donjem levom uglu broj_ispaljenih/broj_ukupno metaka
    		char str[255];
    		sprintf(str, "Metkovi: %d / %d", br_ispaljeniih_metaka, MAX_METKOVA);
     		ispisi_tekst(str, 2, 10, 0, 1, 0, screen_width, screen_height);
+
+		//Ispisujemo u donjem desnom uglu broj_pogodaka/broj_preostalih prepreka 
     		char str1[255];
     		sprintf(str1, "   Br. pogodaka: %d / %d", br_pogodjenih_prepreka, MAX_PREPREKA);
    		ispisi_tekst(str1, screen_width - strlen(str1) - 210, 10, 0, 1, 0, screen_width, screen_height);
 
+		//Kada smo dosli do kraja simulacije
+		//Ili smo pogodili 10 prepreka
+		//Ispisujemo tekst
 		if (kraj_simulacije || br_pogodjenih_prepreka==10) {
+			//Zid na kome se ispisuje tekst
 			glPushMatrix();
 				glScalef(1000, 1000, 1);
 				glTranslatef(0, 0, 1);
 				iscrtaj_zid();
 			glPopMatrix();
 			
+			//Ako je pogodjeno 10 prepreka, igrac je pobedio
 			if(br_pogodjenih_prepreka==10){
-				double pom = 0.1;
-				double pom1 = 0.1;
+				double pom = 0.1;//za ispis '*' oko teksta, okvir
+				double pom1 = 0.1;//za ispis '*' oko teksta, okvir
 
+				//Gornja ivica okvira teksta
 				char string[255] = "*************************";
 				ispisi_tekst(string, screen_width/2 - strlen(string) - 145, screen_height/2+20, 0, 1, 0, screen_width, screen_height);
 
-				
+				//Leva ivica okvira teksta
 				for(int i=0;i<5;i++){
 					char string[255] = "*";
 					ispisi_tekst(string, screen_width/2 - strlen(string) - 168, screen_height/2+5-pom, 0, 1, 0, screen_width, screen_height);
 					pom +=15;
 				}
 				
+				//Desna ivica okvira teksta
 				for(int i=0;i<5;i++){
 					char string[255] = "*";
 					ispisi_tekst(string, screen_width/2 - strlen(string) + 119, screen_height/2+5-pom1, 0, 1, 0, screen_width, screen_height);
 					pom1 +=15;
 				}
 
+				//Ispisujemo tekst da je igrac pobedio, kao i broj pogodjenih prepreka
 				char str2[255];
 				sprintf(str2, "Pobedio si, pogodjeno: %d", br_pogodjenih_prepreka);
 				ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-5, 0, 1, 0, screen_width, screen_height);
+				
+				//Ispisujemo komandu za izlaz
 				ispisi_tekst("          ESC - izlaz ", screen_width/2 - strlen(str1) - 120, screen_height/2-40, 0, 1, 0, screen_width, screen_height);
 
+				//Donja ivica okvira teksta
 				char string1[255] = "*************************";
 				ispisi_tekst(string1, screen_width/2 - strlen(string1) - 143, screen_height/2-75, 0, 1, 0, screen_width, screen_height);
 			}
+			
+			//Ispis teksta kada je igrac izgubio
+			//tj. nije uspeo da pogodi 10 prepreka
 			else{	
-				double pom = 0.1;
-				double pom1 = 0.1;
+				double pom = 0.1;//za ispis '*' oko teksta, okvir
+				double pom1 = 0.1;//za ispis '*' oko teksta, okvir
 
+				//Gornja ivica okvira teksta
 				char string[255] = "*************************";
 				ispisi_tekst(string, screen_width/2 - strlen(string) - 145, screen_height/2+20, 0, 1, 0, screen_width, screen_height);
 
+				//Leva ivica okvira teksta
 				for(int i=0;i<5;i++){
 					char string[255] = "*";
 					ispisi_tekst(string, screen_width/2 - strlen(string) - 168, screen_height/2+5-pom, 0, 1, 0, screen_width, screen_height);
 					pom +=15;
 				}
 				
+				//Desna ivica okvira teksta
 				for(int i=0;i<5;i++){
 					char string[255] = "*";
 					ispisi_tekst(string, screen_width/2 - strlen(string) + 119, screen_height/2+5-pom1, 0, 1, 0, screen_width, screen_height);
 					pom1 +=15;
 				}
 
+				//Ispisujemo tekst da je igrac izgubio, kao i broj pogodjenih prepreka
         			char str2[255];
         			sprintf(str2, "Izgubio si, pogodjeno: %d", br_pogodjenih_prepreka);
 				ispisi_tekst(str2, screen_width/2 - strlen(str1) - 120, screen_height/2-5, 0, 1, 0, screen_width, screen_height);
+
+				//Ispisujemo komandu za izlaz
 				ispisi_tekst("          ESC - izlaz ", screen_width/2 - strlen(str1) - 120, screen_height/2-40, 0, 1, 0, screen_width, screen_height);
 
+				//Donja ivica okvira teksta
 				char string1[255] = "*************************";
 				ispisi_tekst(string1, screen_width/2 - strlen(string1) - 143, screen_height/2-75, 0, 1, 0, screen_width, screen_height);
 			}
 		}
 	}
 
+	//Ispis teksta kada animacija nije aktivna
 	if(!animation_ongoing){
+		//Zid na kome se ispisuje tekst
 		glPushMatrix();
 			glScalef(1000, 1000, 1);
 			glTranslatef(0, 0, 1);
 			iscrtaj_zid();
 		glPopMatrix();
-		double pom = 0.1;
-		double pom1 = 0.1;
 
+		double pom = 0.1;//za ispis '*' oko teksta, okvir
+		double pom1 = 0.1;//za ispis '*' oko teksta, okvir
+
+		//Gornja ivica okvira teksta
 		char string[255] = "**************************************";
 		ispisi_tekst(string, screen_width/2 - strlen(string) - 185, screen_height/2+205, 0, 1, 0, screen_width, screen_height);
 
+		//Desna ivica okvira teksta
 		for(int i=0;i<23;i++){
 			char string[255] = "*";
 			ispisi_tekst(string, screen_width/2 - strlen(string) - 236, screen_height/2+205-pom, 0, 1, 0, screen_width, screen_height);
 			pom +=15;
 		}
 
+		//Leva ivica okvira teksta
 		for(int i=0;i<23;i++){
 			char string[255] = "*";
 			ispisi_tekst(string, screen_width/2 - strlen(string) + 236, screen_height/2+205-pom1, 0, 1, 0, screen_width, screen_height);
 			pom1 +=15;
 		}
 
+		//Ispisujemo naslov tj. naziv igre 
 		char str[255] = "    -  R E F L E X    C H E C K  -";
 		ispisi_tekst(str, screen_width/2 - strlen(str) - 135, screen_height/2+167, 0, 1, 0, screen_width, screen_height);
 
-
+		//Ispisujemo komandu za pokretanje simulacije
 		char str1[255] = "'K/k' - Pokretanje/nastavak simulacije";
 		ispisi_tekst(str1, screen_width/2 - strlen(str1) - 135, screen_height/2+77, 0, 1, 0, screen_width, screen_height);
 
+		//Ispisujemo komandu za pauzu simulacije
 		char str2[255] = "'P/p' - Pauza simulacije";
 		ispisi_tekst(str2, screen_width/2 - strlen(str1) - 135, screen_height/2+47, 0, 1, 0, screen_width, screen_height);
 
+		//Ispisujemo komandu za pokretanje pistolja u desno
 		char str3[255] = "'D/d' - Pomeranje pistolja desno";
 		ispisi_tekst(str3, screen_width/2 - strlen(str1) - 135, screen_height/2-10, 0, 1, 0, screen_width, screen_height);
 
+		//Ispisujemo komandu za pokretanje pistolja u levo
 		char str4[255] = "'A/a' - Pomeranje pistolja levo";
 		ispisi_tekst(str4, screen_width/2 - strlen(str1) - 135, screen_height/2-39, 0, 1, 0, screen_width, screen_height);
 
+		//Ispisujemo komandu za ispaljivanje metkova
 		char str5[255] = "'G/g' - Ispaljivanje metkova";
 		ispisi_tekst(str5, screen_width/2 - strlen(str1) - 135, screen_height/2-66, 0, 1, 0, screen_width, screen_height);
 
+		//Donja ivica okvira teksta
 		char string1[255] = "**************************************";
 		ispisi_tekst(string, screen_width/2 - strlen(string1) - 185, screen_height/2-125, 0, 1, 0, screen_width, screen_height);
 

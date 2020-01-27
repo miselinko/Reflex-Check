@@ -12,7 +12,7 @@
 const float maks_brizna = 0.1;
 const float korak_mete = 3;
 float brzina_mete = 0.02;
-float parametarPom = 0.1;
+float parametarPom = 0.1;//Parametar se koristi za rotaciju prepreka
 Prepreka prepreke[MAX_PREPREKA];
 
 GLuint wall_texture_name;
@@ -51,19 +51,25 @@ void iscrtaj_ose() {
 
 }
 
-//Funkcija za crtanje pistolja
+//Funkcija koja sluzi za crtanje pistolja
 void iscrtaj_pistolj() {
-
+	//Koeficijenti ambijentalne refleksije materijala
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
-    	GLfloat diffuse_coeffs[] = { 0.3, 0.3, 0.3, 1 };
+	//Koeficijenti difuzne refleksije materijala    	
+	GLfloat diffuse_coeffs[] = { 0.3, 0.3, 0.3, 1 };
+	//Koeficijenti spekularne refleksije materijala
     	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
+	//Koeficijent glatkosti materijala
 	GLfloat shininess = 0.3*128;
 	
+	/* Podesavaju se parametri materijala. */
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_coeffs);
     	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_coeffs);
     	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_coeffs);
     	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
+
+	//Sredio sam izgled pistolja uz pomoc drugih tela
     	glPushMatrix();
 	glColor3f(0, 0, 1);
 
@@ -114,8 +120,6 @@ void iscrtaj_pistolj() {
         	glutSolidCube(1);
     	glPopMatrix();
 	
-	
-	
 
 	glPushMatrix();
 		glTranslatef(0.1, -0.1, 0.45);
@@ -151,19 +155,24 @@ void iscrtaj_pistolj() {
 	glPopMatrix();
 }
 
-//Funkcija za crtanje metkova
-void iscrtaj_metak() 
-{
+//Funkcija koja sluzi za crtanje metkova
+void iscrtaj_metak() {
+	//Koeficijenti ambijentalne refleksije materijala
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
-    	GLfloat diffuse_coeffs[] = { 1.0, 0.6, 0.1, 1 };
-    	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
+	//Koeficijenti difuzne refleksije materijala
+	GLfloat diffuse_coeffs[] = { 1.0, 0.6, 0.1, 1 };
+	//Koeficijenti spekularne refleksije materijala
+	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
+	//Koeficijent glatkosti materijala	
 	GLfloat shininess = 0.3*128;
 	
+	/* Podesavaju se parametri materijala. */
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_coeffs);
     	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_coeffs);
     	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_coeffs);
     	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
+	//Sredio sam izgled metka koristeci sferu i clipping ravan
     	glPushMatrix();
 
 	glColor3f(1,0,0);
@@ -178,18 +187,19 @@ void iscrtaj_metak()
 }
 
 
-//Funkcije za prepreke
+//Funkcija za pravljenje prepreka
 Prepreka napravi_prepreke(){
 	Prepreka tmp;
-    	tmp.x =  -10;
-    	tmp.z = -5;
-        tmp.pogodjena_parametar = 0;
-        tmp.is_pogodjena = false;
+    	tmp.x =  -10; //Polozaj po x osi
+    	tmp.z = -5; //Polozaj po y osi
+        tmp.pogodjena_parametar = 0; 
+        tmp.is_pogodjena = false; //inicijalno, telo nije pogodjeno
 	tmp.pogodjena_parametar1 = 1;
     
     	return tmp;
 }
 
+//Funkcija koja pravi niz prepreka, max_prepreka je 30
 void inicijalizuj_prepreke(){
 	for(int i = 0; i < MAX_PREPREKA; i++) {
         	prepreke[i] = napravi_prepreke();
@@ -197,6 +207,7 @@ void inicijalizuj_prepreke(){
     	}
 }
 
+//Funkcija koja azurira prepreke po x osi, menja brzinu prepreke
 void azuriraj_prepreke(){
 	int i;
 
@@ -208,48 +219,56 @@ void azuriraj_prepreke(){
 	}
 }
 
-void nacrtaj_prepreke(){
+//Funkcija za crtanje prereka
+void nacrtaj_prepreke() {
+	//Koeficijenti ambijentalne refleksije materijala
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
+	//Koeficijenti difuzne refleksije materijala
     	GLfloat diffuse_coeffs[] = { 0.1, 0.4, 1, 1 };
+	//Koeficijenti spekularne refleksije materijala
     	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
+	//Koeficijent glatkosti materijala	
 	GLfloat shininess = 0.3*128;
 	
+	/* Podesavaju se parametri materijala. */
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_coeffs);
     	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_coeffs);
     	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_coeffs);
     	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
 	for(int i=0;i<MAX_PREPREKA;i++){
+		//Ako prepreka nije pogodjenja
         	if (!prepreke[i].is_pogodjena) {
             	glPushMatrix();
-                	glTranslatef(prepreke[i].x, 0,prepreke[i].z );
-                	glutSolidCube(0.3);
-			glutSolidSphere(0.17,15,15);
-			glutWireCone(0.24, 0.24, 15, 1);
-			glRotatef(parametarPom*10, 1,0,0);
-			glScalef(0.3, 0.3, 0.3);			
-			glutWireIcosahedron();
-			parametarPom += 0.01;
+                	glTranslatef(prepreke[i].x, 0,prepreke[i].z );//Kretanje prepreke kad se pogodi
+                	glutSolidCube(0.3);//Crtanje kocke
+			glutSolidSphere(0.17,15,15);//Crtamo sferu
+			glutWireCone(0.24, 0.24, 15, 1);//Crtamo kupu
+			glRotatef(parametarPom*10, 1,0,0);//Rotacija ikosaedra po x osi
+			glScalef(0.3, 0.3, 0.3);//Skaliranje ikosaedra
+			glutWireIcosahedron();//Crtanje ikosaedra
+			parametarPom += 0.01;//Parametar za rotaciju
       		glPopMatrix();
-        	} 
+        	}
+		//Ako prepreka jeste pogodjena
 		else {
 		        if (prepreke[i].pogodjena_parametar <= 1) {
 		            glPushMatrix();
-		                glTranslatef(prepreke[i].x, -prepreke[i].pogodjena_parametar*5,prepreke[i].z );
-				glRotatef(prepreke[i].pogodjena_parametar*193, 1,0,1);
-		                glutSolidCube(0.3*prepreke[i].pogodjena_parametar1);
-				glutSolidSphere(0.17*prepreke[i].pogodjena_parametar1,15,15);
-				glutWireCone(0.24*prepreke[i].pogodjena_parametar1, 0.24, 15, 1);
-				glRotatef(parametarPom*10, 1,0,0);
-				glScalef(0.3*prepreke[i].pogodjena_parametar1, 0.3*prepreke[i].pogodjena_parametar1, 0.3*prepreke[i].pogodjena_parametar1);			
-				glutWireIcosahedron();
+		                glTranslatef(prepreke[i].x, -prepreke[i].pogodjena_parametar*5,prepreke[i].z );//Kretanje prepreke kad se pogodi
+				glRotatef(prepreke[i].pogodjena_parametar*193, 1,0,1);//Rotacija prepreke po x i z osi
+		                glutSolidCube(0.3*prepreke[i].pogodjena_parametar1);//Crtamo kocku
+				glutSolidSphere(0.17*prepreke[i].pogodjena_parametar1,15,15);//Crtamo sferu
+				glutWireCone(0.24*prepreke[i].pogodjena_parametar1, 0.24, 15, 1);//Crtamo kupu
+				glRotatef(parametarPom*10, 1,0,0);//Rotacija ikosaedra
+				glScalef(0.3*prepreke[i].pogodjena_parametar1, 0.3*prepreke[i].pogodjena_parametar1, 0.3*prepreke[i].pogodjena_parametar1);//Skaliranje ikosaedra
+				glutWireIcosahedron();//Crtamo ikosaedar
 
 				if(prepreke[i].pogodjena_parametar1>0){
-					prepreke[i].pogodjena_parametar1-=0.005;
+					prepreke[i].pogodjena_parametar1-=0.005;//Parametar za smanjivanje prepreke kada se pogodi
 				}
 
-				parametarPom += 0.01;
-		                prepreke[i].pogodjena_parametar += 0.01;
+				parametarPom += 0.01;//Parametar za rotaciju
+		                prepreke[i].pogodjena_parametar += 0.01;//Parametar za rotaciju kada je prepreka pogodjena 
 		            glPopMatrix();
 		        }	
 		}
@@ -312,11 +331,16 @@ void initialize()
 void iscrtaj_zid(){
 	const static GLfloat material_emission[] = { 0.15, 0.15, 0.15, 1 };
     	
+	//Koeficijenti ambijentalne refleksije materijala
 	GLfloat ambient_coeffs[] = { 0.05375, 0.05, 0.06625, 1 };
+	//Koeficijenti difuzne refleksije materijala
     	GLfloat diffuse_coeffs[] = { 0.6, 0.6, 0.6, 1 };
+	//Koeficijenti spekularne refleksije materijala
     	GLfloat specular_coeffs[] = {  0.332741, 0.528634, 0.346435, 1 };
+	//Koeficijent glatkosti materijala
 	GLfloat shininess = 0.3*128;
 	
+	/* Podesavaju se parametri materijala. */
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_coeffs);
     	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_coeffs);
     	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_coeffs);
@@ -324,7 +348,7 @@ void iscrtaj_zid(){
 	
 	glMaterialfv(GL_FRONT, GL_EMISSION, material_emission);
 
-
+	//Crtanje poligona
 	glPushMatrix();
 		glBegin(GL_QUADS);
 
@@ -347,7 +371,7 @@ void iscrtaj_zid(){
 	glPopMatrix();
 }
 
-//Funkcija za ispis teksta
+//Funkcija za ispis teksta 
 void ispisi_tekst(char * tekst, int x, int y, float r, float g, float b, int sirina_ekrana, int duzina_ekrana)
 {
 	glDisable(GL_LIGHTING);
@@ -359,12 +383,14 @@ void ispisi_tekst(char * tekst, int x, int y, float r, float g, float b, int sir
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-
+	
+	//Boja teksta
 	glColor4f(r, g, b, 1.0 );
 	glOrtho(0, sirina_ekrana, 0, duzina_ekrana, -1, 1);
 
 	glRasterPos2f(x, y);
 
+	//Ispis teksta karak. po karak.
 	int len= strlen(tekst);
 	for (int i = 0; i < len; i++) {
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, tekst[i]);
