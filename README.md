@@ -20,7 +20,7 @@ Cilj igre je pogoditi 10 meta. Mete iskacu sa desne strane i ima ih 30, a kako v
 
 | Komanda | Opis |
 | --- | --- |
-| <kbd>K</kbd> | Pokretanje/nastavak simulacije   |
+|    <kbd>K</kbd> | Pokretanje/nastavak simulacije   |
 | <kbd>P</kbd> | Pauza simulacije                 |
 | <kbd>A</kbd> | Pomeranje pištolja levo          |
 | <kbd>D</kbd> | Pomeranje pištolja desno         |
