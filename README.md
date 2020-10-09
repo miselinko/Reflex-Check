@@ -7,7 +7,7 @@
 
 ### :memo: Opis igre:
 
-Cilj igre je pogoditi 10 meta. Mete iskacu sa desne strane i ima ih 30, a kako vreme prolazi mete se ubrzavaju. U donjem levom uglu ekrana igrac moze da vidi koliko je ispalio metkova, dok u donjem desnom uglu ekrana uvek moze da prati koliko je meta pogodio. Na kraju igre izlazi rezultat uspesno pogodjenih meta, kao i da li je igrac uspeo da pobedi.
+Cilj igre je pogoditi 10 meta. Mete iskacu sa desne strane i ima ih 30, a kako vreme prolazi mete se ubrzavaju. U donjem levom uglu ekrana igrac moze da vidi koliko je ispalio metkova, dok u donjem desnom uglu ekrana igrac moze da prati koliko je meta pogodio. Na kraju igre izlazi rezultat uspesno pogodjenih meta, kao i da li je igrac uspeo da pobedi.
 
 ## :wrench: Instalacija i pokretanje:
 
